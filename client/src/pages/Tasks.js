@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import API from '../api';
 import { FiTrash2, FiEdit2, FiCheck } from 'react-icons/fi';
 import '../styles/Tasks.css';
 
@@ -34,7 +34,7 @@ const Tasks = () => {
         url += `category=${filter.category}`;
       }
 
-      const response = await axios.get(url, {
+      const response = await API.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTasks(response.data);
@@ -54,7 +54,7 @@ const Tasks = () => {
     }
 
     try {
-      const response = await axios.post('/api/tasks', newTask, {
+      const response = await API.post('/api/tasks', newTask, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -77,7 +77,7 @@ const Tasks = () => {
 
   const handleCompleteTask = async (taskId, completed) => {
     try {
-      const response = await axios.put(
+      const response = await API.put(
         `/api/tasks/${taskId}`,
         { completed: !completed },
         {
@@ -94,7 +94,7 @@ const Tasks = () => {
   const handleDeleteTask = async (taskId) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
-        await axios.delete(`/api/tasks/${taskId}`, {
+        await API.delete(`/api/tasks/${taskId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import API from '../api';
 import '../styles/Dashboard.css';
 
 const Dashboard = () => {
@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('/api/users/gamification/stats', {
+      const response = await API.get('/api/users/gamification/stats', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStats(response.data);
@@ -27,7 +27,7 @@ const Dashboard = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('/api/tasks', {
+      const response = await API.get('/api/tasks', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTasks(response.data);

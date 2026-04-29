@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import API from '../api';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import '../styles/Analytics.css';
 
@@ -20,9 +20,9 @@ const Analytics = () => {
   const fetchAnalytics = async () => {
     try {
       const [weekly, monthly, categories] = await Promise.all([
-        axios.get('/api/analytics/weekly', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('/api/analytics/monthly', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('/api/analytics/categories', { headers: { Authorization: `Bearer ${token}` } }),
+        API.get('/api/analytics/weekly', { headers: { Authorization: `Bearer ${token}` } }),
+        API.get('/api/analytics/monthly', { headers: { Authorization: `Bearer ${token}` } }),
+        API.get('/api/analytics/categories', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       setWeeklyData(weekly.data);

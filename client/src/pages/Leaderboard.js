@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import API from '../api';
 import '../styles/Leaderboard.css';
 
 const Leaderboard = () => {
@@ -16,7 +16,7 @@ const Leaderboard = () => {
 
   const fetchLeaderboard = async () => {
     try {
-      const response = await axios.get(`/api/users/leaderboard/page?page=${page}&limit=20`, {
+      const response = await API.get(`/api/users/leaderboard/page?page=${page}&limit=20`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLeaderboard(response.data.leaderboard);
