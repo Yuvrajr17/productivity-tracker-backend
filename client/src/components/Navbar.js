@@ -18,29 +18,42 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="container navbar-content">
-        <Link to="/dashboard" className="navbar-brand">
+      <div className="navbar-container">
+        <Link to="/dashboard" className="navbar-logo">
           🚀 Productivity Tracker
         </Link>
 
-        <div className="nav-links">
-          <Link to="/dashboard" className="nav-link">
-            Dashboard
-          </Link>
-          <Link to="/tasks" className="nav-link">
-            Tasks
-          </Link>
-          <Link to="/analytics" className="nav-link">
-            Analytics
-          </Link>
-          <Link to="/leaderboard" className="nav-link">
-            Leaderboard
-          </Link>
-        </div>
+        <ul className="navbar-links">
+          <li>
+            <Link to="/dashboard" className="nav-link">
+              <span className="nav-icon">📊</span>
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link to="/tasks" className="nav-link">
+              <span className="nav-icon">✅</span>
+              Tasks
+            </Link>
+          </li>
+          <li>
+            <Link to="/analytics" className="nav-link">
+              <span className="nav-icon">📈</span>
+              Analytics
+            </Link>
+          </li>
+          <li>
+            <Link to="/leaderboard" className="nav-link">
+              <span className="nav-icon">🏆</span>
+              Leaderboard
+            </Link>
+          </li>
+        </ul>
 
-        <div className="nav-user">
-          <span className="username">{user.username}</span>
-          <button className="btn btn-secondary btn-small" onClick={handleLogout}>
+        <div className="navbar-user">
+          <span className="navbar-username">{user.username}</span>
+          <button className="navbar-logout" onClick={handleLogout}>
+            <span className="nav-icon">🚪</span>
             Logout
           </button>
         </div>

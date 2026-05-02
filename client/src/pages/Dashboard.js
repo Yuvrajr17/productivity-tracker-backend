@@ -4,39 +4,41 @@ import API from '../api';
 import '../styles/Dashboard.css';
 
 const Dashboard = () => {
-  const { token, user } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [stats, setStats] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats();
-    fetchTasks();
-  }, []);
+    const fetchStats = async () => {
+      try {
+        const response = await API.get('/api/users/gamification/stats', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setStats(response.data);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
 
-  const fetchStats = async () => {
-    try {
-      const response = await API.get('/api/users/gamification/stats', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setStats(response.data);
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    }
-  };
+    const fetchTasks = async () => {
+      try {
+        const response = await API.get('/api/tasks', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setTasks(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        setLoading(false);
+      }
+    };
 
-  const fetchTasks = async () => {
-    try {
-      const response = await API.get('/api/tasks', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setTasks(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-      setLoading(false);
+    if (token) {
+      fetchStats();
+      fetchTasks();
     }
-  };
+  }, [token]);
 
   if (loading || !stats) {
     return <div className="loading">Loading...</div>;
@@ -53,34 +55,42 @@ const Dashboard = () => {
         {/* Gamification Stats */}
         <div className="stats-grid">
           <div className="stat-card primary">
-            <div className="stat-icon">⭐</div>
-            <div className="stat-content">
-              <div className="stat-value">{stats.totalXP}</div>
-              <div className="stat-label">Total XP</div>
+            <div className="stat-card-content">
+              <div className="stat-card-header">
+                <div className="stat-card-icon">⭐</div>
+              </div>
+              <div className="stat-card-value">{stats.totalXP}</div>
+              <div className="stat-card-label">Total XP</div>
             </div>
           </div>
 
           <div className="stat-card secondary">
-            <div className="stat-icon">📈</div>
-            <div className="stat-content">
-              <div className="stat-value">{stats.level}</div>
-              <div className="stat-label">Level</div>
+            <div className="stat-card-content">
+              <div className="stat-card-header">
+                <div className="stat-card-icon">📈</div>
+              </div>
+              <div className="stat-card-value">{stats.level}</div>
+              <div className="stat-card-label">Level</div>
             </div>
           </div>
 
           <div className="stat-card success">
-            <div className="stat-icon">🔥</div>
-            <div className="stat-content">
-              <div className="stat-value">{stats.currentStreak}</div>
-              <div className="stat-label">Current Streak</div>
+            <div className="stat-card-content">
+              <div className="stat-card-header">
+                <div className="stat-card-icon">🔥</div>
+              </div>
+              <div className="stat-card-value">{stats.currentStreak}</div>
+              <div className="stat-card-label">Current Streak</div>
             </div>
           </div>
 
           <div className="stat-card warning">
-            <div className="stat-icon">🏆</div>
-            <div className="stat-content">
-              <div className="stat-value">{stats.longestStreak}</div>
-              <div className="stat-label">Longest Streak</div>
+            <div className="stat-card-content">
+              <div className="stat-card-header">
+                <div className="stat-card-icon">🏆</div>
+              </div>
+              <div className="stat-card-value">{stats.longestStreak}</div>
+              <div className="stat-card-label">Longest Streak</div>
             </div>
           </div>
         </div>
