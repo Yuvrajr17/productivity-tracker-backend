@@ -213,7 +213,7 @@ body {
 
 
 /*  Global Animations  */
-@keyframes fadeIn {
+/* @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -254,4 +254,4 @@ body {
  
 .pulse {
   animation: pulse 2s infinite;
-}
+} */
