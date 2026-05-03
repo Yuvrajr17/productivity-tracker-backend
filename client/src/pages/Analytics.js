@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import API from '../api';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import '../styles/Analytics.css';
 
 const Analytics = () => {
@@ -13,11 +13,7 @@ const Analytics = () => {
 
   const COLORS = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, []);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       const [weekly, monthly, categories] = await Promise.all([
         API.get('/api/analytics/weekly', { headers: { Authorization: `Bearer ${token}` } }),
@@ -33,7 +29,11 @@ const Analytics = () => {
       console.error('Error fetching analytics:', error);
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   if (loading || !monthlyStats) {
     return <div className="loading">Loading analytics...</div>;
@@ -142,24 +142,43 @@ const Analytics = () => {
         <div className="grid grid-2 mt-20">
           <div className="chart-container">
             <h2>Tasks by Category</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={categoryData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, completed }) => `${name}: ${completed}`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="completed"
+            <ResponsiveContainer width="100%" height={320}>
+              <BarChart data={categoryData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.06)" />
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#94a3b8"
+                  tick={{ fill: '#94a3b8', fontSize: 12 }}
+                />
+                <YAxis 
+                  stroke="#94a3b8"
+                  tick={{ fill: '#94a3b8', fontSize: 12 }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '12px',
+                    backdropFilter: 'blur(20px)',
+                    color: '#e2e8f0',
+                  }}
+                  cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                />
+                <Legend 
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="square"
+                />
+                <Bar 
+                  dataKey="completed" 
+                  fill="#667eea" 
+                  radius={[8, 8, 0, 0]}
+                  animationDuration={800}
                 >
                   {categoryData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           </div>
 
